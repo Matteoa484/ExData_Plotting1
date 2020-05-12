@@ -1,7 +1,10 @@
 library(readr)
 library(lubridate)
+library(dplyr)
 
-raw_data <-
+# read file and parse cols
+
+data <-
     read_delim(
         "./raw_data/household_power_consumption.txt",
         delim = ";",
@@ -20,3 +23,8 @@ raw_data <-
         )
     )
 
+# select dates 2007-02-01 and 2007-02-02
+
+data <- 
+    data %>% 
+    filter(Date >= as.Date("2007-02-01", "%Y-%m-%d") & Date <= as.Date("2007-02-02", "%Y-%m-%d"))
