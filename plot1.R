@@ -31,7 +31,7 @@ data <-
 
 # draw histogram
 
-png(file = "plot1.png")
+png(file = "plot1.png", width = 480, height = 480)
 
 with(
   data, 
