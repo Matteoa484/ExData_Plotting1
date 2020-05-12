@@ -2,6 +2,7 @@ library(readr)
 library(lubridate)
 library(dplyr)
 
+
 # read file and parse cols
 
 data <-
@@ -12,7 +13,7 @@ data <-
     col_names = TRUE,
     col_types = cols(
       Date = col_date(format = "%d/%m/%Y"),
-      Time = col_time(format = ""),
+      Time = col_time(format = "%H:%M:%S"),
       Global_active_power = col_double(),
       Global_reactive_power = col_double(),
       Voltage = col_double(),
@@ -23,19 +24,34 @@ data <-
     )
   )
 
-data <-
+
+# merge date/time and keep cols needed
+
+data <- 
     data %>%
-    mutate(
-        time = strftime(data$Time, "%H:%M:%S"),
-        days = wday(Date, label = TRUE)
+    mutate(date_time = ymd_hms(paste(Date, Time))) %>%
+    select(date_time, Global_active_power)
+
+
+# filter for dates
+
+start <- ymd_hms("2007-02-01 00:00:00")
+end <- ymd_hms("2007-02-02 23:59:00")
+data <- data[data$date_time >= start & data$date_time <= end, ]
+
+
+# draw timeserie
+
+png(file = "plot2.png", width = 480, height = 480)
+
+with(
+    data, 
+    plot(date_time, 
+         Global_active_power, 
+         type = "l", 
+         xlab = "", 
+         ylab = "Global Active Power (kilowatts)"
     )
+)
 
-# strftime(data$Time[2], "%H:%M:%S")
-
-# To show date and time in the axis you can use function axis.POSIXct:
-  
-# plot(data, xaxt="n")
-# axis.POSIXct(side=1, at=cut(data$time, "days"), format="%m/%d") 
-# You can control where the ticks fall with at (as for regular functionaxis 
-# except here it is to be provided with objects of class POSIXct) and control 
-# how they will appear with format.
+dev.off()
