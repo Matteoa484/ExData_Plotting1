@@ -2,7 +2,8 @@ library(readr)
 library(lubridate)
 library(dplyr)
 
-# read file and parse cols
+
+# read file and parse cols ------------------------------------------------
 
 data <-
     read_delim(
@@ -23,14 +24,16 @@ data <-
         )
     )
 
-# select dates 2007-02-01 and 2007-02-02
+# select dates 2007-02-01 and 2007-02-02 ----------------------------------
 
 data <- 
     data %>% 
     filter(Date >= as.Date("2007-02-01", "%Y-%m-%d") & Date <= as.Date("2007-02-02", "%Y-%m-%d"))
 
-# draw histogram
 
+# create and save histogram -----------------------------------------------
+
+# call file device
 png(file = "plot1.png", width = 480, height = 480)
 
 with(
@@ -43,4 +46,5 @@ with(
   )
 )
 
+# close file device
 dev.off()
