@@ -3,7 +3,7 @@ library(lubridate)
 library(dplyr)
 
 
-# read file and parse cols
+# read file and parse cols ------------------------------------------------
 
 data <-
   read_delim(
@@ -25,7 +25,7 @@ data <-
   )
 
 
-# merge date/time and keep cols needed
+# merge date/time and drop unwanted cols ----------------------------------
 
 data <- 
   data %>%
@@ -33,15 +33,16 @@ data <-
   select(date_time, Sub_metering_1, Sub_metering_2, Sub_metering_3)
 
 
-# filter for dates
+# filter dates ------------------------------------------------------------
 
 start <- ymd_hms("2007-02-01 00:00:00")
 end <- ymd_hms("2007-02-02 23:59:00")
 data <- data[data$date_time >= start & data$date_time <= end, ]
 
 
-# draw multiple timeseries
+# create and save plot ----------------------------------------------------
 
+# call file device
 png(file = "plot3.png", width = 480, height = 480)
 
 with(data, 
@@ -64,4 +65,5 @@ legend("topright",
        lty = 1
 )
 
+# close file device
 dev.off()
